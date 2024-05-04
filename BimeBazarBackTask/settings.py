@@ -10,20 +10,21 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from pathlib import Path
+
+from .config import SECRET_KEY_CONF, DEBUG_CONF, DATABASES_CONF
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ik@_zt$)s9=)0i2)^&jy+5r+lm-czxa%i4s7fdhqvf*zh(+(46'
+SECRET_KEY = SECRET_KEY_CONF
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DEBUG_CONF
 
 ALLOWED_HOSTS = []
 
@@ -78,12 +79,7 @@ WSGI_APPLICATION = 'BimeBazarBackTask.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = DATABASES_CONF
 
 
 # Password validation
