@@ -1,5 +1,5 @@
 # GoodReads
- BimeBazar Backend Task
+
 
 # Installations
 1. asgiref==3.8.1
