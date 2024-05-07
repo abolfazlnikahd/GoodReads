@@ -51,3 +51,33 @@ class BookMarkDelete(APIView):
         obj = Bookmarks.objects.filter(book_id=pk, user_id=get_object_or_404(User, id=request.user.id))
         obj.delete()
         return Response("deleted", status=status.HTTP_204_NO_CONTENT)
+
+class BookReaction(APIView):
+    def post(self, request, pk, *args, **kwargs):
+        book = get_object_or_404(Books, **{"pk":pk})
+        data_key = [i for i in request.data.keys()]
+        data = request.data
+        data['book_id'] = book
+        data['user_id'] = request.user
+        if 'rate_number' in data_key and 'comment' in data_key:
+            comment = data['comment']
+            del data['comment']
+            score = ScoreSerializer().create(data)
+            score.save()
+            data['comment'] = comment
+            del data['rate_number']
+            comment = CommentSerializer().create(data)
+            comment.save()
+            return Response(status=status.HTTP_200_OK)
+
+        elif 'rate_number' in data_key:
+            score = ScoreSerializer().create(data)
+            score.save()
+
+            return Response(status=status.HTTP_200_OK)
+
+        elif 'comment' in data_key:
+            comment = CommentSerializer().create(data)
+            comment.save()
+            return Response(status=status.HTTP_200_OK)
+
