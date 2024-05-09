@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from .models import Books, Bookmarks, Score, Comment
-from .serializers import BookSerializer, BookDetailSerializer, CommentSerializer, ScoreSerializer
+from .serializers import BookSerializer, BookDetailSerializer, CommentSerializer, ScoreSerializer, BookMaarkSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -27,23 +27,22 @@ class BookDetailView(APIView):
 
 class BookMark(APIView):
     def get(self, request, pk, *args, **kwargs):
-        bok = get_object_or_404(Books, **{'pk': pk})
+        book = get_object_or_404(Books, **{'pk': pk})
         user = get_object_or_404(User, id=request.user.id)
+        serializerdict = {
+            "book_id": book,
+            "user_id": user
+        }
         a = Comment.objects.filter(book_id=pk, user_id=request.user.id).exists()
         b = Score.objects.filter(book_id=pk, user_id=request.user.id).exists()
         c = Bookmarks.objects.filter(book_id=pk, user_id=request.user).exists()
         if a or b or c:
-            return Response({"msg":"first"}, status=status.HTTP_400_BAD_REQUEST)
-        obj = Bookmarks(book_id=bok, user_id=user)
-        obj.save()
-        return Response({"msg": f"The book with ID number {pk} has been added to your bookmark"},
-                        status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = BookMaarkSerializer().create(validated_data=serializerdict)
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
 
-    """def delete(self, request, pk, *args, **kwargs):
-        obj = Bookmarks.objects.filter(book_id=pk, user_id=request.user.id)
-        obj.delete()
 
-        return Response({"msg":"deleted"},status=status.HTTP_204_NO_CONTENT)"""
 
 
 class BookMarkDelete(APIView):
