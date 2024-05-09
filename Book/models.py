@@ -27,3 +27,7 @@ class Comment(models.Model):
 class Bookmarks(models.Model):
     book_id = models.ForeignKey(Books, on_delete=models.CASCADE, related_name='bookmarks')
     user_id = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='bookmarks')
+
+    def __str__(self):
+        book = Books.objects.get(pk=self.book_id.pk)
+        return f'{book.title}'
