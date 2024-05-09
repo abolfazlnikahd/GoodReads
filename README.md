@@ -47,3 +47,6 @@ You must be authenticated to use this API.
 this Api while delete book with id number <book id> from your bookmark shelf.
 
 <img src="postman_result/bookmark-delete.jpg" alt="Alt text" >
+
+
+#### Accounts Api's
