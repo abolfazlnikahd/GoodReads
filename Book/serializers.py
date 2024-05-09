@@ -1,7 +1,9 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
+from django.shortcuts import  get_object_or_404
+from rest_framework.response import Response
 
 from .models import Books, Bookmarks, Score, Comment
-
+from django.contrib.auth.models import User
 
 class BookSerializer(serializers.ModelSerializer):
     book_marks = serializers.SerializerMethodField()
@@ -71,6 +73,8 @@ class BookMaarkSerializer(serializers.ModelSerializer):
         model = Bookmarks
         fields = ['user_id', 'book_id']
 
+    def create(self, validated_data):
+        return Bookmarks.objects.create(**validated_data)
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
