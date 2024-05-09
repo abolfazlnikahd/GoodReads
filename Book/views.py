@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
+
 from .models import Books, Bookmarks, Score, Comment
 from .serializers import BookSerializer, BookDetailSerializer, CommentSerializer, ScoreSerializer, BookMaarkSerializer
 from rest_framework import status
@@ -26,6 +28,7 @@ class BookDetailView(APIView):
 
 
 class BookMark(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk, *args, **kwargs):
         book = get_object_or_404(Books, **{'pk': pk})
         user = get_object_or_404(User, id=request.user.id)
@@ -46,12 +49,14 @@ class BookMark(APIView):
 
 
 class BookMarkDelete(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk, *args, **kwargs):
         obj = Bookmarks.objects.filter(book_id=pk, user_id=get_object_or_404(User, id=request.user.id))
         obj.delete()
         return Response("deleted", status=status.HTTP_204_NO_CONTENT)
 
 class BookReaction(APIView):
+    permission_classes = [IsAuthenticated,]
     def post(self, request, pk, *args, **kwargs):
         book = get_object_or_404(Books, **{"pk":pk})
         data_key = [i for i in request.data.keys()]
